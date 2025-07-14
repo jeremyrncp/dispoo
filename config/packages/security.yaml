@@ -13,10 +13,18 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        app:
             lazy: true
+            pattern: ^/
             provider: app_user_provider
-
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                default_target_path: app_service
+                failure_path: app_failure_login
+            logout:
+                path: app_logout
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
@@ -26,8 +34,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/stripe-web-hook, roles: PUBLIC_ACCESS }
+        - { path: ^/reset_password/, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/reset_password, roles: PUBLIC_ACCESS }
+        - { path: ^/,  roles: IS_AUTHENTICATED_FULLY }
+
 
 when@test:
     security:

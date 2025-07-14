@@ -1,0 +1,44 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block title %}Mes catégories de service{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Mes catégories de service</h2>
+                <p class="text-secondary">Gère ici toutes tes catégories.</p>
+            </div>
+            <div>
+                <a href="{{ path("app_category_add") }}" class="btn btn-primary">+ Ajouter une catégorie</a><br /><br />
+                <a href="{{ path("app_service") }}" class="btn btn-primary">Gérer les services</a>
+
+            </div>
+        </div>
+
+        <table class="table text-white align-middle">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td style="width: 85%">
+                        {{ category.name }}
+                    </td>
+                    <td>
+                        <form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette donnée ?');">
+                            <a href="{{ path("app_category_edit", {"id": category.id}) }}"><i class="fas fa-pen-to-square" ></i></a>
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                            <button class="border-white"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

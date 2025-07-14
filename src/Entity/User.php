@@ -39,6 +39,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Category::class, mappedBy: 'owner')]
     private Collection $categories;
 
+    #[ORM\Column(length: 255)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $Name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $Address = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -153,5 +165,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->Name;
+    }
+
+    public function setName(string $Name): static
+    {
+        $this->Name = $Name;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->Address;
+    }
+
+    public function setAddress(string $Address): static
+    {
+        $this->Address = $Address;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->firstname . " " . $this->Name;
     }
 }

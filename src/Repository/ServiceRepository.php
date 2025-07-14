@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Service;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,16 @@ class ServiceRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Service::class);
+    }
+
+    public function findByUser(User $user)
+    {
+        return $this->createQueryBuilder("u")
+                    ->innerJoin("u.category", "c")
+                    ->andWhere("c.owner = :user")
+                    ->setParameter("user", $user)
+                    ->getQuery()
+                    ->getResult();
     }
 
     //    /**

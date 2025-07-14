@@ -1,0 +1,61 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Mes services</h2>
+                <p class="text-secondary">Gère ici toutes tes prestations principales et options supplémentaires.</p>
+            </div>
+            <div>
+                <button class="btn btn-primary">+ Ajouter un service</button><br /><br />
+                <a href="{{ path("app_category") }}" class="btn btn-primary">Gérer les catégories</a>
+
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="#">Upsells</a>
+            </li>
+        </ul>
+
+        <table class="table text-white align-middle">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Durée</th>
+                <th>Prix</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <img src="https://cdn-icons-png.flaticon.com/512/1164/1164576.png" alt="Canapé"> Canapé 3 places
+                </td>
+                <td>45 min</td>
+                <td>60 €</td>
+                <td>
+                    <button class="icon-btn"><i class="bi bi-pencil"></i></button>
+                    <button class="icon-btn"><i class="bi bi-bookmark"></i></button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="https://cdn-icons-png.flaticon.com/512/743/743920.png" alt="Lavage auto"> Lavage auto extérieur
+                </td>
+                <td>30 min</td>
+                <td>30 €</td>
+                <td>
+                    <button class="icon-btn"><i class="bi bi-pencil"></i></button>
+                    <button class="icon-btn"><i class="bi bi-bookmark"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
