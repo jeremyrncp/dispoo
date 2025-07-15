@@ -1,5 +1,7 @@
 {% extends 'base_backofficeclient.html.twig' %}
 
+{% block title %}Mes services{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -8,7 +10,7 @@
                 <p class="text-secondary">Gère ici toutes tes prestations principales et options supplémentaires.</p>
             </div>
             <div>
-                <button class="btn btn-primary">+ Ajouter un service</button><br /><br />
+                <a href="{{ path("app_service_add") }}" class="btn btn-primary">+ Ajouter un service</a><br /><br />
                 <a href="{{ path("app_category") }}" class="btn btn-primary">Gérer les catégories</a>
 
             </div>
@@ -33,28 +35,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>
-                    <img src="https://cdn-icons-png.flaticon.com/512/1164/1164576.png" alt="Canapé"> Canapé 3 places
-                </td>
-                <td>45 min</td>
-                <td>60 €</td>
-                <td>
-                    <button class="icon-btn"><i class="bi bi-pencil"></i></button>
-                    <button class="icon-btn"><i class="bi bi-bookmark"></i></button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <img src="https://cdn-icons-png.flaticon.com/512/743/743920.png" alt="Lavage auto"> Lavage auto extérieur
-                </td>
-                <td>30 min</td>
-                <td>30 €</td>
-                <td>
-                    <button class="icon-btn"><i class="bi bi-pencil"></i></button>
-                    <button class="icon-btn"><i class="bi bi-bookmark"></i></button>
-                </td>
-            </tr>
+            {% for service in services %}
+                <tr>
+                    <td>
+                        <img src="/uploads/{{ service.image }}" alt="{{ service.name }}"> {{ service.name }}
+                    </td>
+                    <td>{{ service.duration }} min</td>
+                    <td>{{ service.price/100 }} €</td>
+                    <td>
+                        <form method="post" action="{{ path('app_service_delete', {'id': service.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette donnée ?');">
+                            <a href="{{ path("app_service_edit", {"id": service.id}) }}"><i class="fas fa-pen-to-square" ></i></a>
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ service.id) }}">
+                            <button class="border-white"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+
+            {% endfor %}
             </tbody>
         </table>
     </div>
