@@ -21,7 +21,7 @@ class FileService
         return $uniqid . "_" . $service->getId();
     }
 
-    public function naming(Service $service): string
+    public function naming(): string
     {
         return uniqid();
     }

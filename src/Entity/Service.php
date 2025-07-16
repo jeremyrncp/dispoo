@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ServiceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
@@ -30,6 +32,17 @@ class Service
 
     #[ORM\ManyToOne(inversedBy: 'services')]
     private ?Category $category = null;
+
+    /**
+     * @var Collection<int, Upsell>
+     */
+    #[ORM\ManyToMany(targetEntity: Upsell::class, mappedBy: 'services')]
+    private Collection $upsells;
+
+    public function __construct()
+    {
+        $this->upsells = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +117,33 @@ class Service
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Upsell>
+     */
+    public function getUpsells(): Collection
+    {
+        return $this->upsells;
+    }
+
+    public function addUpsell(Upsell $upsell): static
+    {
+        if (!$this->upsells->contains($upsell)) {
+            $this->upsells->add($upsell);
+            $upsell->addService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUpsell(Upsell $upsell): static
+    {
+        if ($this->upsells->removeElement($upsell)) {
+            $upsell->removeService($this);
+        }
 
         return $this;
     }

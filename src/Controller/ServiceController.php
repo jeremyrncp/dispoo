@@ -129,7 +129,7 @@ final class ServiceController extends AbstractController
         $file = $servieVO->image;
 
         if ($file instanceof File) {
-            $nameFile             = $fileService->naming($service);
+            $nameFile             = $fileService->naming();
             $filenameandextension = $fileService->save($file, __DIR__ . "/../../public/uploads/", $nameFile);
             $service->setImage($filenameandextension);
         }

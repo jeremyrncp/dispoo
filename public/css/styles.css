@@ -17,6 +17,9 @@ body {
 .sidebar a:hover {
     background-color: #334155;
 }
+.sidebar-hover {
+    background-color: #334155 !important;
+}
 
 .sidebar h2 {
     padding: 1rem;
