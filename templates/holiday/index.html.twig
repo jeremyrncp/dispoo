@@ -1,0 +1,52 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block title %}Congés et jours fériés{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Mes congés et jours fériés</h2>
+                <p class="text-secondary">Gère ici tous tes congés et jours fériés.</p>
+            </div>
+            <div>
+                <a href="{{ path("app_holiday_add") }}" class="btn btn-primary">+ Ajouter un congé ou un jour férié</a><br /><br />
+            </div>
+        </div>
+
+        <div class="alert alert-info">Attention, la suppression d'un congé/jour férié comportant des rendez-vous annulera les dits rendez-vous</div>
+
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ path("app_timeslot") }}">Créneaux horaires</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ path("app_holiday") }}">Congés et jours fériés</a>
+            </li>
+        </ul>
+
+        <table class="table text-white align-middle">
+            <thead>
+            <tr>
+                <th>Début</th>
+                <th>Fin</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for holiday in holidays %}
+                    <tr>
+                        <td>{{ holiday.startTime|date("H:i d-m-Y") }}</td>
+                        <td>{{ holiday.endTime|date("H:i d-m-Y")  }}</td>
+                        <td>
+                            <form method="post" action="{{ path('app_holiday_delete', {'id': holiday.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette donnée ? la suppression du congé/jour férié comportant des rendez-vous annulera les dits rendez-vous');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ holiday.id) }}">
+                                <button class="border-white"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

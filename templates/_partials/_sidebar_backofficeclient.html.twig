@@ -18,6 +18,7 @@
         <a href="#">🏠 Tableau de bord</a>
         <a href="#">📅 Rendez-vous</a>
         <a href="#">👤 Clients</a>
+        <a href="{{ path("app_timeslot") }}" class="{{ app.request.attributes.get('_route') in ['app_timeslot', "app_timeslot_add", 'app_holiday', "app_holiday_add"] ? 'sidebar-hover' : '' }}">📆 Créneaux horaires</a>
         <a href="{{ path("app_service") }}" class="{{ app.request.attributes.get('_route') in ['app_service', 'app_service_add', 'app_upsell', 'app_upsell_add'] ? 'sidebar-hover' : '' }}">🛠️ Services</a>
         <a href="#">📝 Formulaire</a>
         <a href="#">⚙️ Paramètres</a>
@@ -33,6 +34,7 @@
     <a href="#">🏠 Tableau de bord</a>
     <a href="#">📅 Rendez-vous</a>
     <a href="#">👤 Clients</a>
+    <a href="{{ path("app_timeslot") }}" class="{{ app.request.attributes.get('_route') in ['app_timeslot', "app_timeslot_add", 'app_holiday', "app_holiday_add"] ? 'sidebar-hover' : '' }}">📆 Créneaux horaires</a>
     <a href="{{ path("app_service") }}" class="{{ app.request.attributes.get('_route') in ['app_service', 'app_service_add', 'app_upsell', 'app_upsell_add'] ? 'sidebar-hover' : '' }}">🛠️ Services</a>
     <a href="#">📝 Formulaire</a>
     <a href="#">⚙️ Paramètres</a>

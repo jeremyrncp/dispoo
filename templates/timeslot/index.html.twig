@@ -1,0 +1,58 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block title %}Mes créneaux horaires{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Mes créneaux horaires</h2>
+                <p class="text-secondary">Gère ici tous tes créneaux horaires.</p>
+            </div>
+            <div>
+                <a href="{{ path("app_timeslot_add") }}" class="btn btn-primary">+ Ajouter un créneau horaire</a><br /><br />
+            </div>
+        </div>
+
+        <div class="alert alert-info">Attention, la suppression d'un créneau comportant des rendez-vous annulera les dits rendez-vous</div>
+
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ path("app_timeslot") }}">Créneaux horaires</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ path("app_holiday") }}">Congés et jours fériés</a>
+            </li>
+        </ul>
+
+        <table class="table text-white align-middle">
+            <thead>
+            <tr>
+                <th>Jours</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Délais entre rendez-vous</th>
+                <th>Nombre maximum de rendez-vous</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for timeslot in timeslots %}
+                    <tr>
+                        <td>{{ timeslot.days|days }}</td>
+                        <td>{{ timeslot.startTime|date("H:i") }}</td>
+                        <td>{{ timeslot.endTime|date("H:i") }}</td>
+                        <td>{{ timeslot.delayBetweenAppointments}}</td>
+                        <td>{{ timeslot.numberAppointments }}</td>
+                        <td>
+                            <form method="post" action="{{ path('app_timeslot_delete', {'id': timeslot.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette donnée ? la suppression du créneau comportant des rendez-vous annulera les dits rendez-vous');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ timeslot.id) }}">
+                                <button class="border-white"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

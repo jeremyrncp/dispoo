@@ -51,9 +51,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    /**
+     * @var Collection<int, Timeslot>
+     */
+    #[ORM\OneToMany(targetEntity: Timeslot::class, mappedBy: 'owner')]
+    private Collection $timeslots;
+
+    /**
+     * @var Collection<int, Holiday>
+     */
+    #[ORM\OneToMany(targetEntity: Holiday::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $holidays;
+
+    /**
+     * @var Collection<int, Appointment>
+     */
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $appointments;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->timeslots = new ArrayCollection();
+        $this->holidays = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,5 +239,95 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullName(): string
     {
         return $this->firstname . " " . $this->Name;
+    }
+
+    /**
+     * @return Collection<int, Timeslot>
+     */
+    public function getTimeslots(): Collection
+    {
+        return $this->timeslots;
+    }
+
+    public function addTimeslot(Timeslot $timeslot): static
+    {
+        if (!$this->timeslots->contains($timeslot)) {
+            $this->timeslots->add($timeslot);
+            $timeslot->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimeslot(Timeslot $timeslot): static
+    {
+        if ($this->timeslots->removeElement($timeslot)) {
+            // set the owning side to null (unless already changed)
+            if ($timeslot->getOwner() === $this) {
+                $timeslot->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Holiday>
+     */
+    public function getHolidays(): Collection
+    {
+        return $this->holidays;
+    }
+
+    public function addHoliday(Holiday $holiday): static
+    {
+        if (!$this->holidays->contains($holiday)) {
+            $this->holidays->add($holiday);
+            $holiday->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHoliday(Holiday $holiday): static
+    {
+        if ($this->holidays->removeElement($holiday)) {
+            // set the owning side to null (unless already changed)
+            if ($holiday->getOwner() === $this) {
+                $holiday->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): static
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments->add($appointment);
+            $appointment->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): static
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getOwner() === $this) {
+                $appointment->setOwner(null);
+            }
+        }
+
+        return $this;
     }
 }

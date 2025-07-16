@@ -1,0 +1,24 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block title %}Ajouter un congé et jour férié{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Ajouter un congé et jour férié</h2>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ path("app_timeslot") }}">Créneaux horaires</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ path("app_holiday") }}">Congés et jours fériés</a>
+            </li>
+        </ul>
+
+        {{ form(form) }}
+    </div>
+{% endblock %}
