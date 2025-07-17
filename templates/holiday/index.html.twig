@@ -14,8 +14,6 @@
             </div>
         </div>
 
-        <div class="alert alert-info">Attention, la suppression d'un congé/jour férié comportant des rendez-vous annulera les dits rendez-vous</div>
-
         <ul class="nav nav-tabs mb-3">
             <li class="nav-item">
                 <a class="nav-link text-white" href="{{ path("app_timeslot") }}">Créneaux horaires</a>
@@ -39,7 +37,7 @@
                         <td>{{ holiday.startTime|date("H:i d-m-Y") }}</td>
                         <td>{{ holiday.endTime|date("H:i d-m-Y")  }}</td>
                         <td>
-                            <form method="post" action="{{ path('app_holiday_delete', {'id': holiday.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette donnée ? la suppression du congé/jour férié comportant des rendez-vous annulera les dits rendez-vous');">
+                            <form method="post" action="{{ path('app_holiday_delete', {'id': holiday.id}) }}" onsubmit="return confirm('Voulez-vous supprimer cette donnée ?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ holiday.id) }}">
                                 <button class="border-white"><i class="fas fa-trash"></i></button>
                             </form>

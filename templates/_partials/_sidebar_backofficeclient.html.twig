@@ -16,7 +16,7 @@
     </div>
     <div class="offcanvas-body p-0">
         <a href="#">🏠 Tableau de bord</a>
-        <a href="#">📅 Rendez-vous</a>
+        <a href="{{ path("app_appointment") }}" class="{{ app.request.attributes.get('_route') in ["app_appointment", "app_appointment_details", "app_appointment_active", "app_appointment_deactive"] ? 'sidebar-hover' : '' }}">📅 Rendez-vous</a>
         <a href="#">👤 Clients</a>
         <a href="{{ path("app_timeslot") }}" class="{{ app.request.attributes.get('_route') in ['app_timeslot', "app_timeslot_add", 'app_holiday', "app_holiday_add"] ? 'sidebar-hover' : '' }}">📆 Créneaux horaires</a>
         <a href="{{ path("app_service") }}" class="{{ app.request.attributes.get('_route') in ['app_service', 'app_service_add', 'app_upsell', 'app_upsell_add'] ? 'sidebar-hover' : '' }}">🛠️ Services</a>
@@ -32,7 +32,7 @@
 <div class="d-none d-lg-block sidebar">
     <h2 class="text-white fw-bold p-3">Dispoo</h2>
     <a href="#">🏠 Tableau de bord</a>
-    <a href="#">📅 Rendez-vous</a>
+    <a href="{{ path("app_appointment") }}" class="{{ app.request.attributes.get('_route') in ["app_appointment", "app_appointment_details", "app_appointment_active", "app_appointment_deactive"] ? 'sidebar-hover' : '' }}">📅 Rendez-vous</a>
     <a href="#">👤 Clients</a>
     <a href="{{ path("app_timeslot") }}" class="{{ app.request.attributes.get('_route') in ['app_timeslot', "app_timeslot_add", 'app_holiday', "app_holiday_add"] ? 'sidebar-hover' : '' }}">📆 Créneaux horaires</a>
     <a href="{{ path("app_service") }}" class="{{ app.request.attributes.get('_route') in ['app_service', 'app_service_add', 'app_upsell', 'app_upsell_add'] ? 'sidebar-hover' : '' }}">🛠️ Services</a>

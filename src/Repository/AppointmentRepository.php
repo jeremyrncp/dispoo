@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Appointment;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,34 @@ class AppointmentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Appointment::class);
+    }
+
+    public function getByUserAndRangeDate(\DateTime $start, \DateTime $end, User $user)
+    {
+        return $this->createQueryBuilder("a")
+                    ->andWhere("a.startDateTime > :start")
+                    ->andWhere("a.endDateTime < :end")
+                    ->andWhere("a.owner = :owner")
+                    ->setParameter("start", $start)
+                    ->setParameter("end", $end)
+                    ->setParameter("owner", $user)
+                    ->orderBy("a.startDateTime", "ASC")
+                    ->getQuery()
+                    ->getResult();
+    }
+
+
+    public function findByUserAndAboveDate(User $user, \DateTime $date)
+    {
+        return $this->createQueryBuilder("a")
+            ->andWhere("a.startDateTime > :start")
+            ->andWhere("a.owner = :owner")
+            ->setParameter("start", $date)
+            ->setParameter("owner", $user)
+            ->orderBy("a.startDateTime", "ASC")
+            ->getQuery()
+            ->getResult();
+
     }
 
     //    /**

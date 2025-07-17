@@ -68,3 +68,9 @@ body {
     border: none;
     color: white;
 }
+
+.card {
+    background-color: #1e293b;
+    color: white;
+    border: none;
+}

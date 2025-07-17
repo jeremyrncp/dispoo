@@ -1,0 +1,40 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block title %}Mes rendez-vous{% endblock %}
+
+{% block body %}
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Etat : {{ appointment.active ? "actif" : "inactif" }} <a href="{{ path('app_appointment_active', {'id': appointment.id}) }}" class='btn btn-outline-light'>activer</a> <a href="{{ path('app_appointment_deactive', {'id': appointment.id}) }}" class='btn btn-outline-light'>desactiver</a></h5><br />
+                <h5>Début : {{ appointment.startDateTime|date("H:i d-m-Y") }}<br />
+                    Fin : {{ appointment.endDateTime|date("H:i d-m-Y") }}</h5>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Nom : {{ appointment.firstname }} {{ appointment.lastname }}<br />
+                    Adresse : {{ appointment.address }}<br />
+                    Ville : {{ appointment.postalCode }} {{ appointment.city }}</h5>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Prix : {{ appointment.priceCents/100 }} €</h5><br />
+                <h5>Téléphone : <a href="tel:{{ appointment.phoneNumber }}">{{ appointment.phoneNumber }}</a><br />
+                    Email : <a href="mailto:{{ appointment.email }}">{{ appointment.email }}</a><br /></h5>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card p-3">
+                <h3>Prestations</h3><br />
+                {% for appointmentItem in appointment.appointmentItems %}
+                 <h5>{{ appointmentItem.name }}</h5>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

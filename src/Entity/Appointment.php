@@ -179,12 +179,12 @@ class Appointment
         return $this;
     }
 
-    public function getPostlaCode(): ?string
+    public function getPostalCode(): ?string
     {
         return $this->postlaCode;
     }
 
-    public function setPostlaCode(string $postlaCode): static
+    public function setPostalCode(string $postlaCode): static
     {
         $this->postlaCode = $postlaCode;
 
@@ -255,5 +255,15 @@ class Appointment
         }
 
         return $this;
+    }
+
+    public function getListAppointmentItems(): string
+    {
+        $itemsList = [];
+        foreach ($this->appointmentItems as $item) {
+            $itemsList[] = $item->getName();
+        }
+
+        return implode(', ', $itemsList);
     }
 }
