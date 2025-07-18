@@ -65,6 +65,7 @@ final class SubscriptionController extends AbstractController
             'customer' => $customer->id,
             'items' => [[ 'price' => $_ENV['STRIPE_PRICE_ID'] ]],
             'expand' => ['latest_invoice.payment_intent'],
+            'payment_behavior' => 'default_incomplete'
         ]);
 
         $subscription = new Subscription();
@@ -75,8 +76,11 @@ final class SubscriptionController extends AbstractController
 
         $payments = $subscriptionStripe->latest_invoice->payments;
 
-        /** @var PaymentIntent $paymentIntent */
-        $paymentIntent = end($payments);
+        if ($payments !== null) {
+            /** @var PaymentIntent $paymentIntent */
+            $paymentIntent = end($payments);
+        }
+
 
         return $this->json([
             'subscriptionId' => $subscriptionStripe->id,
