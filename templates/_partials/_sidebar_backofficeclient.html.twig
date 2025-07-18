@@ -22,7 +22,7 @@
         <a href="{{ path("app_timeslot") }}" class="{{ app.request.attributes.get('_route') in ['app_timeslot', "app_timeslot_add", 'app_holiday', "app_holiday_add"] ? 'sidebar-hover' : '' }}">📆 Créneaux horaires</a>
         <a href="{{ path("app_service") }}" class="{{ app.request.attributes.get('_route') in ['app_service', 'app_service_add', 'app_upsell', 'app_upsell_add'] ? 'sidebar-hover' : '' }}">🛠️ Services</a>
         <a href="#">📝 Formulaire</a>
-        <a href="#">⚙️ Paramètres</a>
+        <a href="{{ path("app_parameters") }}" class="{{ app.request.attributes.get('_route') in ["app_parameters"] ? 'sidebar-hover' : '' }}">⚙️ Paramètres</a>
 
         <br /><br />
         <a href="/logout" class="text-white">Bonjour {{ app.user.fullName }}, se déconnecter</a>
@@ -39,7 +39,7 @@
     <a href="{{ path("app_timeslot") }}" class="{{ app.request.attributes.get('_route') in ['app_timeslot', "app_timeslot_add", 'app_holiday', "app_holiday_add"] ? 'sidebar-hover' : '' }}">📆 Créneaux horaires</a>
     <a href="{{ path("app_service") }}" class="{{ app.request.attributes.get('_route') in ['app_service', 'app_service_add', 'app_upsell', 'app_upsell_add'] ? 'sidebar-hover' : '' }}">🛠️ Services</a>
     <a href="#">📝 Formulaire</a>
-    <a href="#">⚙️ Paramètres</a>
+    <a href="{{ path("app_parameters") }}" class="{{ app.request.attributes.get('_route') in ["app_parameters"] ? 'sidebar-hover' : '' }}">⚙️ Paramètres</a>
 
     <br /><br />
     <a href="/logout" class="text-white"> Bonjour {{ app.user.fullName }}, se déconnecter</a>

@@ -1,0 +1,40 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block title %}Mes paramètres{% endblock %}
+
+{% block body %}
+<div class="section-title mb-4">Réglages</div>
+    <div class="row g-4">
+        <!-- Vacances -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>📅 Vacances</h5>
+                <a class="btn btn-outline-primary mt-2" href="{{ path("app_holiday") }}">Ajouter une période de fermeture</a>
+            </div>
+        </div>
+        <!-- Réglages & Réservation -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>🔁 Réglags</h5>
+                <div>
+                    <p class="mb-1"><strong>Page de réservation</strong></p>
+                    <a href="#">Générer le code JavaScript</a><br/>
+                    <a href="#">Copier le lien</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>📧 Réglages e-mail</h5>
+                {% if user.mailing is null or user.mailing == true %}
+                    <a href="{{ path("app_parameters_mailing_deactivate") }}" class="btn btn-outline-primary mt-2">Désactiver la confirmation de reidez-vous</a>
+                {% else %}
+                    <a href="{{ path("app_parameters_mailing_activate") }}" class="btn btn-outline-primary mt-2">Activer la confirmation de reidez-vous</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

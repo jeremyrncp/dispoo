@@ -84,6 +84,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTime $trialEndedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $mailing = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $delayInHourBeforeFirstAppointment = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -416,6 +422,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTrialEndedAt(\DateTime $trialEndedAt): static
     {
         $this->trialEndedAt = $trialEndedAt;
+
+        return $this;
+    }
+
+    public function isMailing(): ?bool
+    {
+        return $this->mailing;
+    }
+
+    public function setMailing(?bool $mailing): static
+    {
+        $this->mailing = $mailing;
+
+        return $this;
+    }
+
+    public function getDelayInHourBeforeFirstAppointment(): ?int
+    {
+        return $this->delayInHourBeforeFirstAppointment;
+    }
+
+    public function setDelayInHourBeforeFirstAppointment(?int $delayInHourBeforeFirstAppointment): static
+    {
+        $this->delayInHourBeforeFirstAppointment = $delayInHourBeforeFirstAppointment;
 
         return $this;
     }
