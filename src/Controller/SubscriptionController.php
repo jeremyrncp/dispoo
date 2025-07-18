@@ -29,8 +29,6 @@ final class SubscriptionController extends AbstractController
 
         $subscription = $subscriptionRepository->findOneBy(["owner" => $user]);
 
-        dump($subscription);
-
         $payments = $paymentRepository->findBy(["owner" => $user], ["createdAt" => "DESC"]);
 
         return $this->render('subscription/index.html.twig', [
@@ -76,10 +74,12 @@ final class SubscriptionController extends AbstractController
                      ->setSubscriptionStripeId($subscriptionStripe->id)
                      ->setActive(true);
 
+        $entityManager->persist($subscription);
+        $entityManager->flush();
+
 
         /** @var Invoice $invoice */
         $invoice = \Stripe\Invoice::retrieve($subscriptionStripe->latest_invoice);
-
         $payments = $invoice->payments;
 
         if ($payments !== null) {
