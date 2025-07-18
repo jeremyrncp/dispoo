@@ -75,9 +75,7 @@ final class SubscriptionController extends AbstractController
                      ->setActive(true);
 
 
-        $lastInvoice = \Stripe\Invoice::retrieve($subscriptionStripe->latest_invoice);
-
-        $payments = $lastInvoice->payments;
+        $payments = $subscriptionStripe->latest_invoice->payments;
 
         dump($payments);
 
