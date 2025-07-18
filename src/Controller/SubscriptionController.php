@@ -206,4 +206,48 @@ final class SubscriptionController extends AbstractController
         $this->addFlash("error", "Vous avez déjà bénéficié de l'offre d'essai gratuit");
         return $this->redirectToRoute("app_subscription");
     }
+
+    #[Route('/subscription/pause', name: 'app_subscription_pause')]
+    public function pause(EntityManagerInterface $entityManager, SubscriptionRepository $subscriptionRepository)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $subscription = $subscriptionRepository->findOneBy(["owner" => $user]);
+
+        \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+        \Stripe\Subscription::update($subscription->getSubscriptionStripeId(), [
+            'pause_collection' => ["behavior" => "void"],
+        ]);
+
+        $subscription->setActive(false);
+        $entityManager->flush();
+
+        $this->addFlash("message", "Abonnement mis en pause");
+
+        return $this->redirectToRoute("app_subscription");
+    }
+
+    #[Route('/subscription/resume', name: 'app_subscription_resume')]
+    public function resume(EntityManagerInterface $entityManager, SubscriptionRepository $subscriptionRepository)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $subscription = $subscriptionRepository->findOneBy(["owner" => $user]);
+
+        \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+        \Stripe\Subscription::update($subscription->getSubscriptionStripeId(), [
+            'pause_collection' => ["behavior" => "void", "resumes_at" => time()],
+            ''
+        ]);
+
+        $subscription->setActive(true);
+        $entityManager->flush();
+
+
+        $this->addFlash("message", "Abonnement réactivé");
+
+        return $this->redirectToRoute("app_subscription");
+    }
 }
