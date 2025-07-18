@@ -77,7 +77,7 @@ final class SubscriptionController extends AbstractController
 
         $payments = $subscriptionStripe->latest_invoice->payments;
 
-        dump($payments);
+        var_dump($payments);
 
         if ($payments !== null) {
             /** @var PaymentIntent $paymentIntent */
