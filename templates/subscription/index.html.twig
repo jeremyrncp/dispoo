@@ -1,0 +1,149 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block title %}S'abonner{% endblock %}
+
+{% block body %}
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <div class="row align-items-center">
+        <!-- Left Section -->
+        <div class="col-md-6 mb-5 mb-md-0">
+            <h1 class="fw-bold">Simplifie ta gestion,<br>remplis ton agenda<br>et augmente tes réservations 🚀</h1>
+            <p class="fs-5 mt-3"><h2>15 €/mois – Sans engagement</h2><br>Zéro commission</p>
+            <ul class="list-unstyled mt-4">
+                <li class="mb-2 check-green">✔ Système de réservation 100 % personnalisé</li>
+                <li class="mb-2 check-green">✔ Synchronisation Google Agenda</li>
+                <li class="mb-2 check-green">✔ Rappel email automatique</li>
+                <li class="mb-2 check-green">✔ Augmente ton taux de conversion</li>
+                <li class="mb-2 check-green">✔ Évite les annulations de RDV</li>
+            </ul>
+            <div class="mt-4 d-flex align-items-center gap-4">
+                <span>🔒 Paiement sécurisé via Stripe</span>
+                <span>🔁 Sans engagement, annulation à tout moment</span>
+            </div>
+            <div class="mt-4 d-flex align-items-center gap-4">
+                {% if user.trialEndedAt is null and subscription is null %}
+                    <a href="{{ path("app_subscription_trial") }}" class="btn btn-outline-primary">Bénéficier de l'offre d'un mois d'essai gratuit</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Section (Form) -->
+        <div class="col-md-6">
+            {% if subscription is null %}
+                {% if user.trialEndedAt is not null %}
+                    <div class="alert alert-info">
+                        Vous bénéficiez de l'offre d'essai gratuit jusqu'à l'abonnement ou le <b>{{ user.trialEndedAt|date("d-m-Y") }}</b>
+                    </div>
+                {% endif %}
+
+                <div class="form-section">
+                    <h3 class="mb-4">S'abonner</h3>
+                    <form id="subscription-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" placeholder="Prénom" value="{{ user.firstname }}" disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" placeholder="Nom" value="{{ user.name }}" disabled>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="E-mail" value="{{ user.email }}" disabled>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="cguCheck">
+                            <label class="form-check-label" for="cguCheck">J'accepte les <a href="/xcgu">CGU</a></label>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Nom sur la carte">
+                        </div>
+                        <div class="row mb-3" id="card-element">
+                        </div>
+                        <div class="mb-4">
+                        <button type="submit" class="btn btn-primary w-100">Activer mon abonnement</button>
+                    </form>
+                </div>
+            {% else %}
+                {% if subscription.active == true %}
+                    <h3>Souscription à 15 euros par mois active</h3>
+                    <a href="{{ path("app_subscription_pause") }}" class="btn btn-outline-primary">Mettre en pause</a>
+                {% else %}
+                    <h3>Souscription à 15 euros par mois inactive</h3>
+                    <a href="{{ path("app_subscription_pause") }}" class="btn btn-outline-primary">Reprendre l'abonnement</a>
+                {% endif %}
+
+                <br />
+                <h3>Mes paiements</h3>
+                <table class="table table-dark table-striped mt-3">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Etat</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for payment in payments %}
+                        <tr>
+                            <td>{{ appointment.createdAt|date("H:i d-m-Y") }}</td>
+                            <td>{{ appointment.amountCents/100 }}</td>
+                            <td>{{ appointment.state }}€</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <script>
+    const stripe = Stripe('pk_live_51QdCk5GggPqOdLIA5GmXQ6i7YCJZxpbS8C71D3Eh5wmdcfqAhMZXV3inJ5xxEpSgHZt2L5LBz4Qvdrcj6ejXSKUX002RlgxjI8pk_live_51QdCk5GggPqOdLIA5GmXQ6i7YCJZxpbS8C71D3Eh5wmdcfqAhMZXV3inJ5xxEpSgHZt2L5LBz4Qvdrcj6ejXSKUX002RlgxjI8'); // ta clé publique
+    const elements = stripe.elements();
+    const style = {
+      base: {
+        fontSize: '16px',
+        color: '#32325d',
+        '::placeholder': { color: '#a0aec0' },
+      }
+    };
+
+    const card = elements.create('card', { style });
+    card.mount('#card-element');
+
+    document.querySelector('#subscription-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.querySelector('#email').value;
+
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: card,
+        billing_details: { email }
+      });
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      const res = await fetch('/create-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, paymentMethod: paymentMethod.id })
+      });
+
+      const { clientSecret } = await res.json();
+
+      const result = await stripe.confirmCardPayment(clientSecret);
+      if (result.error) {
+        alert(result.error.message);
+      } else {
+        if (result.paymentIntent.status === 'succeeded') {
+          alert('Abonnement activé avec succès !');
+        }
+      }
+    });
+    </script>
+{% endblock %}

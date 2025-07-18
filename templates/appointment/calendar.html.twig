@@ -1,0 +1,51 @@
+{% extends 'base_backofficeclient.html.twig' %}
+
+{% block javascripts %}
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.18/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.18/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.18/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.18/index.global.min.js'></script>
+
+    <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: [
+          {% for appointment in appointments %}
+              {
+                url: '{{ path("app_appointment_details", {"id": appointment.id}) }}',
+                title: '{{ appointment.firstname }} {{ appointment.lastname }}',
+                start: '{{ appointment.startDateTime|date("Y-m-d") }}T{{ appointment.startDateTime|date("H:i:s") }}',
+                end:'{{ appointment.endDateTime|date("Y-m-d") }}T{{ appointment.endDateTime|date("H:i:s") }}'
+              },
+          {% endfor %}
+        ],
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,listWeek'
+        }
+      });
+      calendar.render();
+    });
+
+    </script>
+
+{% endblock %}
+
+{% block title %}Mes rendez-vous{% endblock %}
+
+{% block body %}
+
+    <h4>Export CSV</h4>
+    {{ form(form) }}
+
+    <div class="text-right mt-4 mb-4">
+        <a href="{{ path("app_appointment") }}"  class="btn btn-outline-primary">Vue tableau</a>
+    </div>
+
+    <div id="calendar"></div>
+
+{% endblock %}

@@ -69,12 +69,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $appointments;
 
+    /**
+     * @var Collection<int, Subscription>
+     */
+    #[ORM\OneToMany(targetEntity: Subscription::class, mappedBy: 'owner')]
+    private Collection $subscriptions;
+
+    /**
+     * @var Collection<int, Payment>
+     */
+    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'owner')]
+    private Collection $payments;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $trialEndedAt = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->timeslots = new ArrayCollection();
         $this->holidays = new ArrayCollection();
         $this->appointments = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -327,6 +344,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $appointment->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subscription>
+     */
+    public function getSubscriptions(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    public function addSubscription(Subscription $subscription): static
+    {
+        if (!$this->subscriptions->contains($subscription)) {
+            $this->subscriptions->add($subscription);
+            $subscription->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscription(Subscription $subscription): static
+    {
+        if ($this->subscriptions->removeElement($subscription)) {
+            // set the owning side to null (unless already changed)
+            if ($subscription->getOwner() === $this) {
+                $subscription->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payment>
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): static
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments->add($payment);
+            $payment->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): static
+    {
+        if ($this->payments->removeElement($payment)) {
+            // set the owning side to null (unless already changed)
+            if ($payment->getOwner() === $this) {
+                $payment->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTrialEndedAt(): ?\DateTime
+    {
+        return $this->trialEndedAt;
+    }
+
+    public function setTrialEndedAt(\DateTime $trialEndedAt): static
+    {
+        $this->trialEndedAt = $trialEndedAt;
 
         return $this;
     }

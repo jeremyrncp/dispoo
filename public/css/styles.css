@@ -74,3 +74,17 @@ body {
     color: white;
     border: none;
 }
+
+.text-right {
+    text-align: right;
+}
+
+#card-element {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    margin-bottom: 16px;
+    width: 99%;
+    margin-left: 3px;
+}

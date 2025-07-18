@@ -65,6 +65,32 @@ final class AppointmentController extends AbstractController
         ]);
     }
 
+    #[Route('/appointment-calendar', name: 'app_appointment_calendar')]
+    public function calendar(Request $request, AppointmentService $appointmentService, AppointmentRepository $appointmentRepository)
+    {
+        $exportAppointmentVO = new ExportAppointmentVO();
+
+        $form = $this->createForm(ExportAppointmentType::class, $exportAppointmentVO);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $appointmentService->export($exportAppointmentVO->start, $exportAppointmentVO->end);
+            $response = new BinaryFileResponse($file);
+
+            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($file) . '"');
+            $response->headers->set('Content-Type', 'text/csv');
+
+            return $response;
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->render('appointment/calendar.html.twig', [
+            'form' => $form->createView(),
+            'appointments' => $appointmentRepository->findBy(["owner" => $user])
+        ]);
+    }
     #[Route('/appointment/{id}/details', name: 'app_appointment_details')]
     public function details(Appointment $appointment)
     {
