@@ -29,6 +29,8 @@ final class SubscriptionController extends AbstractController
 
         $subscription = $subscriptionRepository->findOneBy(["owner" => $user]);
 
+        dump($subscription);
+
         $payments = $paymentRepository->findBy(["owner" => $user], ["createdAt" => "DESC"]);
 
         return $this->render('subscription/index.html.twig', [
