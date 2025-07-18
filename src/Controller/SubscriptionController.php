@@ -239,7 +239,7 @@ final class SubscriptionController extends AbstractController
         \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
         \Stripe\Subscription::update($subscription->getSubscriptionStripeId(), [
-            'pause_collection' => ["behavior" => "keep_as_draft", "resumes_at" => time()],
+            'pause_collection' => [],
             ''
         ]);
 
