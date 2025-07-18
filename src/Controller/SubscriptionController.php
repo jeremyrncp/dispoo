@@ -64,7 +64,6 @@ final class SubscriptionController extends AbstractController
         $subscriptionStripe = \Stripe\Subscription::create([
             'customer' => $customer->id,
             'items' => [[ 'price' => $_ENV['STRIPE_PRICE_ID'] ]],
-            'expand' => ['latest_invoice.payment_intent'],
             'payment_behavior' => 'default_incomplete'
         ]);
 
@@ -76,9 +75,7 @@ final class SubscriptionController extends AbstractController
 
 
         /** @var Invoice $invoice */
-        $invoice = $subscriptionStripe->latest_invoice;
-
-        var_dump($invoice);
+        $payments = $subscriptionStripe->latest_invoice->payment;
 
         if ($payments !== null) {
             /** @var PaymentIntent $paymentIntent */
