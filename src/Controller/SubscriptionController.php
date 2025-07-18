@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Stripe\Event;
 use Stripe\Invoice;
+use Stripe\PaymentIntent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,9 +73,14 @@ final class SubscriptionController extends AbstractController
                      ->setSubscriptionStripeId($subscriptionStripe->id)
                      ->setActive(true);
 
+        $payments = $subscriptionStripe->latest_invoice->payments;
+
+        /** @var PaymentIntent $paymentIntent */
+        $paymentIntent = end($payments);
+
         return $this->json([
             'subscriptionId' => $subscriptionStripe->id,
-            'clientSecret' => $subscriptionStripe->latest_invoice->payment_intent->client_secret,
+            'clientSecret' =>         $paymentIntent->client_secret,
         ]);
     }
 
