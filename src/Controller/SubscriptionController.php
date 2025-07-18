@@ -83,12 +83,16 @@ final class SubscriptionController extends AbstractController
         if ($payments !== null) {
             /** @var PaymentIntent $paymentIntent */
             $paymentIntent = end($payments);
+
+            return $this->json([
+                'subscriptionId' => $subscriptionStripe->id,
+                'clientSecret' =>         $paymentIntent->client_secret,
+            ]);
         }
 
 
         return $this->json([
-            'subscriptionId' => $subscriptionStripe->id,
-            'clientSecret' =>         $paymentIntent->client_secret,
+            'subscriptionId' => $subscriptionStripe->id
         ]);
     }
 
