@@ -239,8 +239,7 @@ final class SubscriptionController extends AbstractController
         \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
         \Stripe\Subscription::update($subscription->getSubscriptionStripeId(), [
-            'pause_collection' => [],
-            ''
+            'pause_collection' => null
         ]);
 
         $subscription->setActive(true);
