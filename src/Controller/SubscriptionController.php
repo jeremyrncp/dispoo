@@ -36,8 +36,9 @@ final class SubscriptionController extends AbstractController
         if ($subscription instanceof Subscription) {
             \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
             $subscriptionStripe = \Stripe\Subscription::retrieve($subscription->getSubscriptionStripeId());
+            $invoiceStripe = \Stripe\Invoice::retrieve($subscriptionStripe->latest_invoice);
 
-            $priceSubscription = $subscriptionStripe->latest_invoice->amount_due;
+            $priceSubscription = $invoiceStripe->amount_due;
         }
 
         return $this->render('subscription/index.html.twig', [
