@@ -24,17 +24,27 @@ final class SubscriptionController extends AbstractController
     #[Route('/subscription', name: 'app_subscription')]
     public function index(SubscriptionRepository $subscriptionRepository, PaymentRepository $paymentRepository): Response
     {
+        $priceSubscription = null;
+
         /** @var User $user */
         $user = $this->getUser();
 
         $subscription = $subscriptionRepository->findOneBy(["owner" => $user]);
-
         $payments = $paymentRepository->findBy(["owner" => $user], ["createdAt" => "DESC"]);
+
+
+        if ($subscription instanceof Subscription) {
+            \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+            $subscriptionStripe = \Stripe\Subscription::retrieve($subscription->getSubscriptionStripeId());
+
+            $priceSubscription = $subscriptionStripe->latest_invoice->amount_due;
+        }
 
         return $this->render('subscription/index.html.twig', [
             'user' => $user,
             'subscription' => $subscription,
-            'payments' => $payments
+            'payments' => $payments,
+            'priceSubscription' => $priceSubscription
         ]);
     }
 
