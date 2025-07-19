@@ -106,21 +106,10 @@ final class SubscriptionController extends AbstractController
 
         /** @var Invoice $invoice */
         $invoice = \Stripe\Invoice::retrieve($subscriptionStripe->latest_invoice);
-        $payments = $invoice->payments;
-
-        if ($payments !== null) {
-            /** @var PaymentIntent $paymentIntent */
-            $paymentIntent = end($payments);
-
-            return $this->json([
-                'subscriptionId' => $subscriptionStripe->id,
-                'clientSecret' =>         $paymentIntent->client_secret,
-            ]);
-        }
-
 
         return $this->json([
-            'subscriptionId' => $subscriptionStripe->id
+            'subscriptionId' => $subscriptionStripe->id,
+            'clientSecret' =>  $invoice->confirmation_secret->client_secret,
         ]);
     }
 
