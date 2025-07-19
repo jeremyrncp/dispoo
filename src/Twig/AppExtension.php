@@ -11,6 +11,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('days', [$this, 'daysFilter']),
+            new TwigFilter('duration', [$this, 'durationFilter']),
         ];
     }
 
@@ -25,5 +26,16 @@ class AppExtension extends AbstractExtension
         }
 
         return implode(",", $return);
+    }
+
+    public function durationFilter($integer)
+    {
+        $hour = floor($integer / 60);
+
+        if ($hour ===  0.0) {
+            return $integer . " min";
+        } else {
+            return $hour . "h " . $integer . "min";
+        }
     }
 }

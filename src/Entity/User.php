@@ -90,6 +90,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $delayInHourBeforeFirstAppointment = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nameCompany = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -446,6 +449,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDelayInHourBeforeFirstAppointment(?int $delayInHourBeforeFirstAppointment): static
     {
         $this->delayInHourBeforeFirstAppointment = $delayInHourBeforeFirstAppointment;
+
+        return $this;
+    }
+
+    public function getNameCompany(): ?string
+    {
+        return $this->nameCompany;
+    }
+
+    public function setNameCompany(?string $nameCompany): static
+    {
+        $this->nameCompany = $nameCompany;
 
         return $this;
     }

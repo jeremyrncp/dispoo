@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Choix du service - {{ user.nameCompany }}{% endblock %}
+
+{% block body %}
+
+    <div class="container-box shadow">
+        <h5 class="mb-4 text-black">{{ user.nameCompany }}</h5>
+        <h2 class="mb-5 fw-bold text-black">Quel type de nettoyage ?</h2>
+
+        <br />
+        <div class="rox">
+            <div id="myBasket" class="my-basket"><h5>Mon panier</h5><div id="contentBasket"></div></div>
+            <div style="clear: both;"></div>
+        </div>
+
+        {% for category in user.categories %}
+            <div class="row g-4">
+                <h3 class="mb-5 fw-bold text-black">{{ category.name }}</h3>
+
+                {% for service in category.services %}
+                    <div class="col-md-4">
+                        <a class="card card-clean h-100 text-decoration-none cursor-pointer" onclick="addService({{ service.id }}, '{{ service.name }}', {{ service.price }})" id="service-{{ service.id }})">
+                            <img src="/uploads/{{ service.image }}" alt="{{ service.name }}">
+                            <div class="p-3">
+                                <div class="card-title text-white">{{ service.name }}</div>
+                                <div class="card-text text-white">{{ service.duration|duration }}<br />{{ service.price/100 }}€</div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <div id="upsells" class="mt-5 mb-5 text-center"></div>
+        <div id="btnAdd" class="btn btn-blue-dark mt-5" style="visibility: hidden; font-size: 30px" >Suivant</div>
+    </div>
+
+    <script type="text/javascript">
+        const addService = (serviceId, name, price) => {
+          document.querySelector("#btnAdd").style.visibility = "visible";
+
+          addBasket("service", serviceId, name, price);
+          getUpsells(serviceId);
+        }
+
+        const addUpsell= (upsellId, name, price) => {
+          addBasket("upsell", upsellId, name, price);
+        }
+
+        const myBasket = {};
+
+        const addBasket = (type, id, name, price) => {
+          const uniqid = Math.floor(Math.random() * 10000000);
+          document.querySelector("#contentBasket").innerHTML += "<span id='basket-"+ uniqid +"' class='mt-2'><input type='hidden' id='type-" + uniqid + "' value='" + type + "' />" + name + "(" + (price/100) + "€) <button class='btn btn-outline-primary' onclick='deleteBasket(" + uniqid + ");'>supprimer</button><br /></span>";
+        }
+
+        const deleteBasket = (id) => {
+          document.querySelector("#basket-" + id).remove();
+        }
+
+        const getUpsells = async (serviceId) => {
+          document.querySelector("#upsells").innerHTML = '<span class="loader"></span>';
+          const reponse = await fetch("/api/service/" + serviceId + "/upsells");;
+          const upsells = await reponse.json();
+
+          let html = '<div class="row g-4"> <h3 class="mb-5 fw-bold text-black">Mes services complémentaires</h3>';
+
+          upsells.forEach((upsell)=>{
+            html += '<div class="col-md-4">' + '<a class="card card-clean h-100 text-decoration-none cursor-pointer" onclick="addUpsell('+upsell.id+', \''+upsell.name+'\', '+upsell.price+')"><img src="/uploads/'+upsell.image+'" alt="'+upsell.name+'"> <div class="p-3"> <div class="card-title text-white">'+upsell.name+'</div> <div class="card-text text-white">'+upsell.duration+'min<br />'+(upsell.price/100)+'€</div> </div> </a> </div>';
+          });
+
+          html += '</div>';
+
+          document.querySelector("#upsells").innerHTML = html;
+
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue chez {{ user.nameCompany }}{% endblock %}
+
+{% block body %}
+
+<div class="card card-custom shadow-lg">
+    <h5 class="mb-4">{{ user.nameCompany }}</h5>
+    <h2 class="mb-4">Bienvenue chez<br>{{ user.nameCompany }} 👋</h2>
+    <a href="{{ path("app_website_step1", {"id": user.id}) }}" class="btn btn-primary btn-lg">Je prends rendez-vous</a>
+</div>
+{% endblock %}

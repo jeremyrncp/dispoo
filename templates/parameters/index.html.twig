@@ -6,14 +6,21 @@
 <div class="section-title mb-4">Réglages</div>
     <div class="row g-4">
         <!-- Vacances -->
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Nom société</h5>
+                {{ form(form) }}
+            </div>
+        </div>
+        <!-- Vacances -->
+        <div class="col-md-3">
             <div class="card p-3">
                 <h5>📅 Vacances</h5>
                 <a class="btn btn-outline-primary mt-2" href="{{ path("app_holiday") }}">Ajouter une période de fermeture</a>
             </div>
         </div>
         <!-- Réglages & Réservation -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card p-3">
                 <h5>🔁 Réglags</h5>
                 <div>
@@ -25,7 +32,7 @@
         </div>
 
         <!-- Email -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card p-3">
                 <h5>📧 Réglages e-mail</h5>
                 {% if user.mailing is null or user.mailing == true %}

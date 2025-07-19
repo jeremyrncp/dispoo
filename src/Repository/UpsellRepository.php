@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Service;
 use App\Entity\Upsell;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -15,6 +16,16 @@ class UpsellRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Upsell::class);
+    }
+
+    public function findByService(Service $service)
+    {
+        return $this->createQueryBuilder("u")
+        ->innerJoin("u.services", "s")
+        ->andWhere("s.id = :serviceId")
+        ->setParameter("serviceId", $service->getId())
+        ->getQuery()
+        ->getResult();
     }
 
     public function findByUser(User $user)
