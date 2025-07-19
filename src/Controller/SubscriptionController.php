@@ -91,7 +91,7 @@ final class SubscriptionController extends AbstractController
             'items' => [[ 'price' => $_ENV['STRIPE_PRICE_ID'] ]],
             'payment_behavior' => 'default_incomplete',
             'default_payment_method' => $paymentMethod,
-            'promotion_code' => $promoCodeId
+            'discounts' => $promoCodeId
         ]);
 
         $subscription = new Subscription();
