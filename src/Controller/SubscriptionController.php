@@ -63,15 +63,6 @@ final class SubscriptionController extends AbstractController
         $paymentMethod = $data['paymentMethod'];
         $promoCode = $data['promoCode'];
 
-        // 1. Créer un client
-        $customer = \Stripe\Customer::create([
-            'email' => $email,
-            'payment_method' => $paymentMethod,
-            'invoice_settings' => [
-                'default_payment_method' => $paymentMethod,
-            ],
-        ]);
-
         // 2. Récupérer l’ID du code promo (s’il existe)
         $promo = \Stripe\PromotionCode::all([
             'code' => $promoCode,
@@ -85,10 +76,19 @@ final class SubscriptionController extends AbstractController
 
         $promoCodeId = $promo->data[0]->id;
 
+        // 1. Créer un client
+        $customer = \Stripe\Customer::create([
+            'email' => $email,
+            'payment_method' => $paymentMethod,
+            'invoice_settings' => [
+                'default_payment_method' => $paymentMethod,
+            ],
+        ]);
+
         // 2. Créer un abonnement
         $subscriptionStripe = \Stripe\Subscription::create([
             'customer' => $customer->id,
-            'items' => [[ 'price' => $_ENV['STRIPE_PRICE_ID'] ]],
+            'items' => [[ 'price' => $_ENV['STRIPE_PRICE_ID']]],
             'payment_behavior' => 'default_incomplete',
             'default_payment_method' => $paymentMethod,
             'discounts' => [["promotion_code" => $promoCodeId]]
